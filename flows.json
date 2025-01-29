@@ -10,7 +10,7 @@
     {
         "id": "53c326cf552a5889",
         "type": "tab",
-        "label": "simpleflow",
+        "label": "Direct Message",
         "disabled": false,
         "info": "",
         "env": []
@@ -18,7 +18,7 @@
     {
         "id": "b61052a032ad7c47",
         "type": "tab",
-        "label": "Flow 3",
+        "label": "Topic Exchange",
         "disabled": false,
         "info": "",
         "env": []
@@ -26,7 +26,7 @@
     {
         "id": "d40ae12cacab640c",
         "type": "tab",
-        "label": "Flow 4",
+        "label": " Fanout Exchange",
         "disabled": false,
         "info": "",
         "env": []
@@ -34,7 +34,7 @@
     {
         "id": "0af3aa3bb02a3884",
         "type": "tab",
-        "label": "Flow 5",
+        "label": "Headers Exchange",
         "disabled": false,
         "info": "",
         "env": []
@@ -315,8 +315,8 @@
         "id": "da960ababab4ac73",
         "type": "comment",
         "z": "931fc66e047477c0",
-        "name": "Flow Header",
-        "info": "File Uploader Example",
+        "name": "File Uploader",
+        "info": "# Description\nFile Uploader simple Example",
         "x": 510,
         "y": 120,
         "wires": []
@@ -336,8 +336,8 @@
         "amqpProperties": "{ \"headers\": {} }",
         "rpcTimeoutMilliseconds": 3000,
         "outputs": 0,
-        "x": 610,
-        "y": 240,
+        "x": 590,
+        "y": 220,
         "wires": []
     },
     {
@@ -362,8 +362,8 @@
         "topic": "",
         "payload": "{ \"command\": \"start\" }",
         "payloadType": "json",
-        "x": 370,
-        "y": 200,
+        "x": 350,
+        "y": 160,
         "wires": [
             [
                 "efe7a260307e6202"
@@ -392,8 +392,8 @@
         "topic": "",
         "payload": "{ \"command\": \"stop\" }",
         "payloadType": "str",
-        "x": 370,
-        "y": 320,
+        "x": 350,
+        "y": 300,
         "wires": [
             [
                 "efe7a260307e6202"
@@ -405,7 +405,7 @@
         "type": "amqp-in",
         "z": "53c326cf552a5889",
         "name": "",
-        "broker": "",
+        "broker": "bfb1e7e97eef5e04",
         "prefetch": 0,
         "reconnectOnError": true,
         "noAck": true,
@@ -414,13 +414,12 @@
         "exchangeRoutingKey": "zone1",
         "exchangeDurable": true,
         "queueName": "",
-        "queueType": "quorum",
         "queueExclusive": true,
         "queueDurable": false,
         "queueAutoDelete": true,
         "headers": "{}",
-        "x": 370,
-        "y": 440,
+        "x": 350,
+        "y": 420,
         "wires": [
             [
                 "63c5671d6f4efd07"
@@ -432,7 +431,7 @@
         "type": "amqp-in",
         "z": "53c326cf552a5889",
         "name": "",
-        "broker": "",
+        "broker": "bfb1e7e97eef5e04",
         "prefetch": 0,
         "reconnectOnError": true,
         "noAck": true,
@@ -441,13 +440,12 @@
         "exchangeRoutingKey": "zone2",
         "exchangeDurable": true,
         "queueName": "",
-        "queueType": "quorum",
         "queueExclusive": true,
         "queueDurable": false,
         "queueAutoDelete": true,
         "headers": "{}",
-        "x": 370,
-        "y": 520,
+        "x": 350,
+        "y": 500,
         "wires": [
             [
                 "e7d4fabe9ef668fe"
@@ -463,12 +461,12 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 640,
-        "y": 440,
+        "x": 620,
+        "y": 420,
         "wires": []
     },
     {
@@ -484,8 +482,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 640,
-        "y": 520,
+        "x": 620,
+        "y": 500,
         "wires": []
     },
     {
@@ -943,6 +941,7 @@
         "exchangeRoutingKey": "",
         "exchangeDurable": false,
         "queueName": "",
+        "queueType": "quorum",
         "queueExclusive": true,
         "queueDurable": false,
         "queueAutoDelete": true,
