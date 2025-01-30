@@ -22,6 +22,26 @@
 
 module.exports = {
 
+    // Custom settings to read environment variables
+    rabbitmq: {
+        user: process.env.RABBITMQ_USER || 'defaultUser',
+        password: process.env.RABBITMQ_PASSWORD || 'defaultPassword',
+        host: process.env.RABBITMQ_HOST || 'localhost',
+        port: process.env.RABBITMQ_PORT || '5672'
+    },
+    couchdb: {
+        authType: process.env.COUCHDB_AUTH_TYPE || 'defaultAuthType',
+        url: process.env.COUCHDB_URL || 'http://localhost:5984',
+        username: process.env.COUCHDB_USERNAME || 'defaultUsername',
+        password: process.env.COUCHDB_PASSWORD || 'defaultPassword'
+    },
+    git: {
+        user: process.env.GIT_USER || 'defaultGitUser',
+        email: process.env.GIT_EMAIL || 'defaultGitEmail',
+        password: process.env.GIT_PSW || 'defaultGitPassword',
+        branch: process.env.GIT_BRANCH || 'defaultBranch'
+    }
+
 /*******************************************************************************
  * Flow File and User Directory Settings
  *  - flowFile
