@@ -60,6 +60,23 @@
         "credsFromSettings": false
     },
     {
+        "id": "212fbc9208d6120c",
+        "type": "global-config",
+        "name": "global-config",
+        "env": [
+            {
+                "name": "rabbit_user",
+                "value": "RABBITMQ_USER",
+                "type": "env"
+            },
+            {
+                "name": "rabbit_psw",
+                "value": "RABBITMQ_PASSWORD",
+                "type": "env"
+            }
+        ]
+    },
+    {
         "id": "7c30fb48.99cd2c",
         "type": "http in",
         "z": "931fc66e047477c0",
@@ -959,7 +976,7 @@
         "type": "amqp-out",
         "z": "0af3aa3bb02a3884",
         "name": "",
-        "broker": "83e9bf71fbe099c8",
+        "broker": "bfb1e7e97eef5e04",
         "reconnectOnError": true,
         "exchangeName": "machines_update",
         "exchangeType": "headers",
@@ -1025,7 +1042,7 @@
         "type": "amqp-out",
         "z": "0af3aa3bb02a3884",
         "name": "",
-        "broker": "83e9bf71fbe099c8",
+        "broker": "bfb1e7e97eef5e04",
         "reconnectOnError": true,
         "exchangeName": "machines_update",
         "exchangeType": "headers",

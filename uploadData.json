@@ -1,0 +1,20 @@
+[
+    {
+        "id": "17dcd193c759bc95",
+        "type": "tab",
+        "label": "Uploader",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4d92518da51f5d35",
+        "type": "comment",
+        "z": "17dcd193c759bc95",
+        "name": "Uploader",
+        "info": "",
+        "x": 540,
+        "y": 300,
+        "wires": []
+    }
+]
