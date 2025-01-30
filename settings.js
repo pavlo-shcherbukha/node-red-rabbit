@@ -40,7 +40,7 @@ module.exports = {
         email: process.env.GIT_EMAIL || 'defaultGitEmail',
         password: process.env.GIT_PSW || 'defaultGitPassword',
         branch: process.env.GIT_BRANCH || 'defaultBranch'
-    }
+    },
 
 /*******************************************************************************
  * Flow File and User Directory Settings
