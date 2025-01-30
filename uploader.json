@@ -8,6 +8,14 @@
         "env": []
     },
     {
+        "id": "1b390ecb82aef0e3",
+        "type": "tab",
+        "label": "Consumer",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "53c326cf552a5889",
         "type": "tab",
         "label": "Direct Message",
@@ -139,8 +147,7 @@
         "y": 320,
         "wires": [
             [
-                "7d8e179a.283e4",
-                "d6b71fa74e0714f9"
+                "7d8e179a.283e4"
             ]
         ]
     },
@@ -149,7 +156,7 @@
         "type": "function",
         "z": "931fc66e047477c0",
         "name": "toBase64",
-        "func": "//let msg1={}\nlet msg2={}\nmsg.name = msg.req.files[0].originalname;\n//msg2.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.payload = msg.req.files[0].buffer.toString();\n}\nmsg2.payload={\n    content: msg.req.files[0].buffer.toString()\n};\nmsg2.propertyes={\"headers\":{ \"name\":msg.req.files[0].originalname,\"content_type\": msg.req.files[0].mimetype}}\nreturn [msg, msg2];\n\n",
+        "func": "//let msg1={}\nlet msg2={}\nmsg.name = msg.req.files[0].originalname;\n//msg2.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.payload = \"Файл не зображення, тому не може бути відображено\";\n}\nmsg2.payload={\n    content: msg.req.files[0].buffer,\n    \"name\":msg.req.files[0].originalname,\n    \"content_type\": msg.req.files[0].mimetype\n};\n//content: msg.req.files[0].buffer.toString(),\nreturn [msg, msg2];\n\n",
         "outputs": 2,
         "timeout": "",
         "noerr": 0,
@@ -183,7 +190,7 @@
         "type": "debug",
         "z": "931fc66e047477c0",
         "name": "debug 1",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -193,22 +200,6 @@
         "statusType": "auto",
         "x": 640,
         "y": 400,
-        "wires": []
-    },
-    {
-        "id": "d6b71fa74e0714f9",
-        "type": "debug",
-        "z": "931fc66e047477c0",
-        "name": "debug 2",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 840,
-        "y": 380,
         "wires": []
     },
     {
@@ -223,11 +214,111 @@
         "exchangeRoutingKey": "doc_queue",
         "exchangeRoutingKeyType": "str",
         "exchangeDurable": true,
-        "amqpProperties": "{\"headers\":{\"fff\":\"msg.ddd\",\"appid\":\"ddddd\"}}",
+        "amqpProperties": "{\"correlationId\":\"1111-2222-3333\",\"headers\":{\"appid\":\"Node-Red-FileUploader\"}}",
         "rpcTimeoutMilliseconds": 3000,
         "outputs": 0,
         "x": 540,
         "y": 440,
+        "wires": []
+    },
+    {
+        "id": "d09c9df15090a01a",
+        "type": "amqp-in",
+        "z": "1b390ecb82aef0e3",
+        "name": "",
+        "broker": "bfb1e7e97eef5e04",
+        "prefetch": 0,
+        "reconnectOnError": false,
+        "noAck": true,
+        "exchangeName": "amq.direct",
+        "exchangeType": "direct",
+        "exchangeRoutingKey": "doc_queue",
+        "exchangeDurable": true,
+        "queueName": "",
+        "queueType": "classic",
+        "queueExclusive": false,
+        "queueDurable": true,
+        "queueAutoDelete": true,
+        "headers": "{}",
+        "x": 320,
+        "y": 180,
+        "wires": [
+            [
+                "dce6a8c1ccbb1a9d",
+                "af2dd38c468f429f",
+                "371d8c9d2ce2f976"
+            ]
+        ]
+    },
+    {
+        "id": "dce6a8c1ccbb1a9d",
+        "type": "debug",
+        "z": "1b390ecb82aef0e3",
+        "name": "CunsumeDBG",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "e1785e7cc67d2626",
+        "type": "file",
+        "z": "1b390ecb82aef0e3",
+        "name": "FileWriter",
+        "filename": "filename",
+        "filenameType": "msg",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "binary",
+        "x": 720,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "af2dd38c468f429f",
+        "type": "function",
+        "z": "1b390ecb82aef0e3",
+        "name": "PrepareFile",
+        "func": "let msgo={}\nmsgo.payload = msg.payload.content\nmsgo.filename = msg.payload.name\nreturn msgo;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 280,
+        "wires": [
+            [
+                "e1785e7cc67d2626"
+            ]
+        ]
+    },
+    {
+        "id": "371d8c9d2ce2f976",
+        "type": "debug",
+        "z": "1b390ecb82aef0e3",
+        "name": "FileWrtDBG",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 450,
+        "y": 380,
         "wires": []
     },
     {
