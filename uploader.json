@@ -2,7 +2,7 @@
     {
         "id": "931fc66e047477c0",
         "type": "tab",
-        "label": "uploader",
+        "label": "FileUploader",
         "disabled": false,
         "info": "",
         "env": []
@@ -10,23 +10,7 @@
     {
         "id": "1b390ecb82aef0e3",
         "type": "tab",
-        "label": "Consumer",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "53c326cf552a5889",
-        "type": "tab",
-        "label": "Direct Message",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "0af3aa3bb02a3884",
-        "type": "tab",
-        "label": "Headers Exchange",
+        "label": "StoreFiles",
         "disabled": false,
         "info": "",
         "env": []
@@ -118,8 +102,8 @@
         "type": "http response",
         "z": "931fc66e047477c0",
         "name": "",
-        "x": 710,
-        "y": 320,
+        "x": 810,
+        "y": 340,
         "wires": []
     },
     {
@@ -132,7 +116,7 @@
         "upload": true,
         "swaggerDoc": "",
         "x": 230,
-        "y": 320,
+        "y": 400,
         "wires": [
             [
                 "d7e5df8b.97a4e8"
@@ -150,8 +134,8 @@
         "syntax": "mustache",
         "template": "<p></p>File {{name}} uploaded !</p>\n\n<h2>Contents:</h2>\n\n<pre>\n{{{payload}}}\n</pre>",
         "output": "str",
-        "x": 570,
-        "y": 320,
+        "x": 610,
+        "y": 340,
         "wires": [
             [
                 "7d8e179a.283e4"
@@ -170,14 +154,13 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 420,
-        "y": 320,
+        "x": 440,
+        "y": 400,
         "wires": [
             [
                 "e1643981.20d7c8"
             ],
             [
-                "a31faebdf78b9a28",
                 "974df30b16e04554"
             ]
         ]
@@ -193,39 +176,22 @@
         "wires": []
     },
     {
-        "id": "a31faebdf78b9a28",
-        "type": "debug",
-        "z": "931fc66e047477c0",
-        "name": "debug 1",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 640,
-        "y": 400,
-        "wires": []
-    },
-    {
         "id": "974df30b16e04554",
         "type": "amqp-out",
         "z": "931fc66e047477c0",
         "name": "",
         "broker": "bfb1e7e97eef5e04",
         "reconnectOnError": false,
-        "exchangeName": "amq.direct",
+        "exchangeName": "doclinter",
         "exchangeType": "direct",
-        "exchangeRoutingKey": "doc_queue",
+        "exchangeRoutingKey": "doc_files",
         "exchangeRoutingKeyType": "str",
         "exchangeDurable": true,
         "amqpProperties": "{\"correlationId\":\"1111-2222-3333\",\"headers\":{\"appid\":\"Node-Red-FileUploader\"}}",
         "rpcTimeoutMilliseconds": 3000,
         "outputs": 0,
-        "x": 540,
-        "y": 440,
+        "x": 650,
+        "y": 480,
         "wires": []
     },
     {
@@ -237,9 +203,9 @@
         "prefetch": 0,
         "reconnectOnError": false,
         "noAck": true,
-        "exchangeName": "amq.direct",
+        "exchangeName": "doclinter",
         "exchangeType": "direct",
-        "exchangeRoutingKey": "doc_queue",
+        "exchangeRoutingKey": "doc_files",
         "exchangeDurable": true,
         "queueName": "",
         "queueType": "classic",
@@ -247,37 +213,19 @@
         "queueDurable": true,
         "queueAutoDelete": true,
         "headers": "{}",
-        "x": 320,
+        "x": 310,
         "y": 180,
         "wires": [
             [
-                "dce6a8c1ccbb1a9d",
                 "af2dd38c468f429f"
             ]
         ]
     },
     {
-        "id": "dce6a8c1ccbb1a9d",
-        "type": "debug",
-        "z": "1b390ecb82aef0e3",
-        "name": "CunsumeDBG",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 640,
-        "y": 160,
-        "wires": []
-    },
-    {
         "id": "af2dd38c468f429f",
         "type": "function",
         "z": "1b390ecb82aef0e3",
-        "name": "PrepareFile",
+        "name": "PrepareDBRequest",
         "func": "let msgo={}\n//msgo.payload = msg.payload.content\n//msgo.filename = msg.payload.name\n  \n\nlet attach = {\n            \"content_type\": msg.payload.content_type,\n            \"data\": msg.payload.content\n} \n\nlet attachitem={}\nattachitem[ msg.payload.name ]=attach\n\nmsgo.payload = {   \n    \"name\": msg.payload.name,\n    \"_attachments\": attachitem\n}    \n\n\n\nreturn msgo;",
         "outputs": 1,
         "timeout": 0,
@@ -285,12 +233,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 530,
-        "y": 280,
+        "x": 570,
+        "y": 180,
         "wires": [
             [
-                "3feb19c7526d4b3f",
-                "371d8c9d2ce2f976"
+                "3feb19c7526d4b3f"
             ]
         ]
     },
@@ -307,373 +254,25 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 630,
-        "y": 500,
+        "x": 970,
+        "y": 180,
         "wires": []
     },
     {
         "id": "3feb19c7526d4b3f",
         "type": "cloudantplus out",
         "z": "1b390ecb82aef0e3",
-        "name": "store-file",
+        "name": "StoreFileInDB",
         "cloudant": "7a7f803fe40b5d6a",
         "database": "ufiles",
         "service": "_ext_",
         "payonly": true,
         "operation": "insert",
-        "x": 720,
-        "y": 380,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "efe7a260307e6202",
-        "type": "amqp-out",
-        "z": "53c326cf552a5889",
-        "name": "",
-        "broker": "bfb1e7e97eef5e04",
-        "reconnectOnError": true,
-        "exchangeName": "irrigation_control",
-        "exchangeType": "direct",
-        "exchangeRoutingKey": "",
-        "exchangeRoutingKeyType": "str",
-        "exchangeDurable": true,
-        "amqpProperties": "{ \"headers\": {} }",
-        "rpcTimeoutMilliseconds": 3000,
-        "outputs": 0,
-        "x": 590,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "538de33f548833ac",
-        "type": "inject",
-        "z": "53c326cf552a5889",
-        "name": "Send command to zone 1",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "routingKey",
-                "v": "zone1",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "{ \"command\": \"start\" }",
-        "payloadType": "json",
-        "x": 350,
-        "y": 160,
+        "x": 780,
+        "y": 180,
         "wires": [
             [
-                "efe7a260307e6202"
-            ]
-        ]
-    },
-    {
-        "id": "20cfe04fab562ea9",
-        "type": "inject",
-        "z": "53c326cf552a5889",
-        "name": "Send command to zone 2",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "routingKey",
-                "v": "zone2",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "{ \"command\": \"stop\" }",
-        "payloadType": "str",
-        "x": 350,
-        "y": 300,
-        "wires": [
-            [
-                "efe7a260307e6202"
-            ]
-        ]
-    },
-    {
-        "id": "7a5e0f3a66dc1ccc",
-        "type": "amqp-in",
-        "z": "53c326cf552a5889",
-        "name": "",
-        "broker": "bfb1e7e97eef5e04",
-        "prefetch": 0,
-        "reconnectOnError": true,
-        "noAck": true,
-        "exchangeName": "irrigation_control",
-        "exchangeType": "direct",
-        "exchangeRoutingKey": "zone1",
-        "exchangeDurable": true,
-        "queueName": "",
-        "queueExclusive": true,
-        "queueDurable": false,
-        "queueAutoDelete": true,
-        "headers": "{}",
-        "x": 350,
-        "y": 420,
-        "wires": [
-            [
-                "63c5671d6f4efd07"
-            ]
-        ]
-    },
-    {
-        "id": "4bf1b44b656c35c2",
-        "type": "amqp-in",
-        "z": "53c326cf552a5889",
-        "name": "",
-        "broker": "bfb1e7e97eef5e04",
-        "prefetch": 0,
-        "reconnectOnError": true,
-        "noAck": true,
-        "exchangeName": "irrigation_control",
-        "exchangeType": "direct",
-        "exchangeRoutingKey": "zone2",
-        "exchangeDurable": true,
-        "queueName": "",
-        "queueExclusive": true,
-        "queueDurable": false,
-        "queueAutoDelete": true,
-        "headers": "{}",
-        "x": 350,
-        "y": 500,
-        "wires": [
-            [
-                "e7d4fabe9ef668fe"
-            ]
-        ]
-    },
-    {
-        "id": "63c5671d6f4efd07",
-        "type": "debug",
-        "z": "53c326cf552a5889",
-        "name": "Zone 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 620,
-        "y": 420,
-        "wires": []
-    },
-    {
-        "id": "e7d4fabe9ef668fe",
-        "type": "debug",
-        "z": "53c326cf552a5889",
-        "name": "Zone 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 620,
-        "y": 500,
-        "wires": []
-    },
-    {
-        "id": "12c8048f.4eaefb",
-        "type": "amqp-in",
-        "z": "0af3aa3bb02a3884",
-        "name": "",
-        "broker": "83e9bf71fbe099c8",
-        "prefetch": 0,
-        "reconnectOnError": true,
-        "noAck": true,
-        "exchangeName": "machines_update",
-        "exchangeType": "headers",
-        "exchangeRoutingKey": "",
-        "exchangeDurable": false,
-        "queueName": "",
-        "queueType": "quorum",
-        "queueExclusive": true,
-        "queueDurable": false,
-        "queueAutoDelete": true,
-        "headers": "{\"x-match\":\"all\",\"machine-type\":\"CNC\",\"status\":\"error\",\"priority\":\"high\"}",
-        "x": 310,
-        "y": 420,
-        "wires": [
-            [
-                "8ec3fa87.70c338"
-            ]
-        ]
-    },
-    {
-        "id": "6eccc4f.c6a2a3c",
-        "type": "amqp-out",
-        "z": "0af3aa3bb02a3884",
-        "name": "",
-        "broker": "83e9bf71fbe099c8",
-        "reconnectOnError": true,
-        "exchangeName": "machines_update",
-        "exchangeType": "headers",
-        "exchangeRoutingKey": "",
-        "exchangeRoutingKeyType": "str",
-        "exchangeDurable": false,
-        "amqpProperties": "{}",
-        "rpcTimeoutMilliseconds": "",
-        "outputs": 0,
-        "x": 670,
-        "y": 200,
-        "wires": []
-    },
-    {
-        "id": "cb5093bf.1d524",
-        "type": "inject",
-        "z": "0af3aa3bb02a3884",
-        "name": "CNC machine: error occured",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "properties",
-                "v": "{\"headers\":{\"machine-type\":\"CNC\",\"status\":\"error\",\"priority\":\"high\"}}",
-                "vt": "json"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "Errror occured in the CNC machine",
-        "payloadType": "str",
-        "x": 340,
-        "y": 200,
-        "wires": [
-            [
-                "6eccc4f.c6a2a3c"
-            ]
-        ]
-    },
-    {
-        "id": "8ec3fa87.70c338",
-        "type": "debug",
-        "z": "0af3aa3bb02a3884",
-        "name": "Only from CNC machines that has status error and priority high",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 750,
-        "y": 420,
-        "wires": []
-    },
-    {
-        "id": "d4c2f84b51d2d3cb",
-        "type": "amqp-out",
-        "z": "0af3aa3bb02a3884",
-        "name": "",
-        "broker": "83e9bf71fbe099c8",
-        "reconnectOnError": true,
-        "exchangeName": "machines_update",
-        "exchangeType": "headers",
-        "exchangeRoutingKey": "",
-        "exchangeRoutingKeyType": "str",
-        "exchangeDurable": false,
-        "amqpProperties": "{}",
-        "rpcTimeoutMilliseconds": "",
-        "outputs": 0,
-        "x": 670,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "81c21e9941e06a58",
-        "type": "inject",
-        "z": "0af3aa3bb02a3884",
-        "name": "Update from Machine A",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "properties",
-                "v": "{\"headers\":{\"machine-type\":\"A\",\"status\":\"idle\",\"priority\":\"high\"}}",
-                "vt": "json"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "Machine A is currently idle, awaiting next operation.",
-        "payloadType": "str",
-        "x": 320,
-        "y": 260,
-        "wires": [
-            [
-                "d4c2f84b51d2d3cb"
-            ]
-        ]
-    },
-    {
-        "id": "abe55aafb5f65eac",
-        "type": "debug",
-        "z": "0af3aa3bb02a3884",
-        "name": "From all of the machines having  status idle or priority high",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 710,
-        "y": 540,
-        "wires": []
-    },
-    {
-        "id": "adfcaa95122a3556",
-        "type": "amqp-in",
-        "z": "0af3aa3bb02a3884",
-        "name": "",
-        "broker": "83e9bf71fbe099c8",
-        "prefetch": 0,
-        "reconnectOnError": true,
-        "noAck": true,
-        "exchangeName": "machines_update",
-        "exchangeType": "headers",
-        "exchangeRoutingKey": "",
-        "exchangeDurable": false,
-        "queueName": "",
-        "queueExclusive": true,
-        "queueDurable": false,
-        "queueAutoDelete": true,
-        "headers": "{\"x-match\":\"any\",\"machine-type\":\"A\",\"status\":\"idle\",\"priority\":\"high\"}",
-        "x": 310,
-        "y": 540,
-        "wires": [
-            [
-                "abe55aafb5f65eac"
+                "371d8c9d2ce2f976"
             ]
         ]
     }
