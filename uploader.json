@@ -1,0 +1,279 @@
+[
+    {
+        "id": "931fc66e047477c0",
+        "type": "tab",
+        "label": "FileUploader",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1b390ecb82aef0e3",
+        "type": "tab",
+        "label": "StoreFiles",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "bfb1e7e97eef5e04",
+        "type": "amqp-broker",
+        "name": "AMQP Config",
+        "host": "rabbitmq",
+        "port": "5672",
+        "vhost": "",
+        "tls": false,
+        "credsFromSettings": false
+    },
+    {
+        "id": "83e9bf71fbe099c8",
+        "type": "amqp-broker",
+        "name": "",
+        "host": "rabbitmq",
+        "port": "5672",
+        "vhost": "",
+        "tls": false,
+        "credsFromSettings": false
+    },
+    {
+        "id": "7a7f803fe40b5d6a",
+        "type": "cloudantplus",
+        "host": "http://couchdb:5984",
+        "name": "insert docu,emt",
+        "useapikey": false
+    },
+    {
+        "id": "7c30fb48.99cd2c",
+        "type": "http in",
+        "z": "931fc66e047477c0",
+        "name": "",
+        "url": "/simple",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 260,
+        "wires": [
+            [
+                "3153fbd3.203a64"
+            ]
+        ]
+    },
+    {
+        "id": "3153fbd3.203a64",
+        "type": "template",
+        "z": "931fc66e047477c0",
+        "name": "html",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<h1>Upload a file here:</h1>\n\n<form action=\"/upload\" method=\"POST\" enctype=\"multipart/form-data\">\n    <input type=\"file\" name=\"myFile\" />\n    <input type=\"submit\" value=\"Submit\">\n</form>",
+        "output": "str",
+        "x": 450,
+        "y": 260,
+        "wires": [
+            [
+                "737e44d2.373a64"
+            ]
+        ]
+    },
+    {
+        "id": "737e44d2.373a64",
+        "type": "http response",
+        "z": "931fc66e047477c0",
+        "name": "",
+        "x": 630,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "46e01eea.4a46a",
+        "type": "comment",
+        "z": "931fc66e047477c0",
+        "name": "Simple",
+        "info": "",
+        "x": 210,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "7d8e179a.283e4",
+        "type": "http response",
+        "z": "931fc66e047477c0",
+        "name": "",
+        "x": 810,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "25859a94.7d9976",
+        "type": "http in",
+        "z": "931fc66e047477c0",
+        "name": "",
+        "url": "/upload",
+        "method": "post",
+        "upload": true,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 400,
+        "wires": [
+            [
+                "d7e5df8b.97a4e8"
+            ]
+        ]
+    },
+    {
+        "id": "e1643981.20d7c8",
+        "type": "template",
+        "z": "931fc66e047477c0",
+        "name": "html",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<p></p>File {{name}} uploaded !</p>\n\n<h2>Contents:</h2>\n\n<pre>\n{{{payload}}}\n</pre>",
+        "output": "str",
+        "x": 610,
+        "y": 340,
+        "wires": [
+            [
+                "7d8e179a.283e4"
+            ]
+        ]
+    },
+    {
+        "id": "d7e5df8b.97a4e8",
+        "type": "function",
+        "z": "931fc66e047477c0",
+        "name": "toBase64",
+        "func": "\nlet msg2={}\nmsg.name = msg.req.files[0].originalname;\n\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.payload = \"Файл не зображення, тому не може бути відображено\";\n}\nmsg2.payload={\n    content: msg.req.files[0].buffer.toString('base64'),\n    \"name\":msg.req.files[0].originalname,\n    \"content_type\": msg.req.files[0].mimetype\n};\n\nreturn [msg, msg2];\n\n",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 400,
+        "wires": [
+            [
+                "e1643981.20d7c8"
+            ],
+            [
+                "974df30b16e04554"
+            ]
+        ]
+    },
+    {
+        "id": "da960ababab4ac73",
+        "type": "comment",
+        "z": "931fc66e047477c0",
+        "name": "File Uploader",
+        "info": "# Description\nFile Uploader simple Example",
+        "x": 510,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "974df30b16e04554",
+        "type": "amqp-out",
+        "z": "931fc66e047477c0",
+        "name": "",
+        "broker": "bfb1e7e97eef5e04",
+        "reconnectOnError": false,
+        "exchangeName": "doclinter",
+        "exchangeType": "direct",
+        "exchangeRoutingKey": "doc_files",
+        "exchangeRoutingKeyType": "str",
+        "exchangeDurable": true,
+        "amqpProperties": "{\"correlationId\":\"1111-2222-3333\",\"headers\":{\"appid\":\"Node-Red-FileUploader\"}}",
+        "rpcTimeoutMilliseconds": 3000,
+        "outputs": 0,
+        "x": 650,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "d09c9df15090a01a",
+        "type": "amqp-in",
+        "z": "1b390ecb82aef0e3",
+        "name": "",
+        "broker": "bfb1e7e97eef5e04",
+        "prefetch": 0,
+        "reconnectOnError": false,
+        "noAck": true,
+        "exchangeName": "doclinter",
+        "exchangeType": "direct",
+        "exchangeRoutingKey": "doc_files",
+        "exchangeDurable": true,
+        "queueName": "",
+        "queueType": "classic",
+        "queueExclusive": false,
+        "queueDurable": true,
+        "queueAutoDelete": true,
+        "headers": "{}",
+        "x": 310,
+        "y": 180,
+        "wires": [
+            [
+                "af2dd38c468f429f"
+            ]
+        ]
+    },
+    {
+        "id": "af2dd38c468f429f",
+        "type": "function",
+        "z": "1b390ecb82aef0e3",
+        "name": "PrepareDBRequest",
+        "func": "let msgo={}\n//msgo.payload = msg.payload.content\n//msgo.filename = msg.payload.name\n  \n\nlet attach = {\n            \"content_type\": msg.payload.content_type,\n            \"data\": msg.payload.content\n} \n\nlet attachitem={}\nattachitem[ msg.payload.name ]=attach\n\nmsgo.payload = {   \n    \"name\": msg.payload.name,\n    \"_attachments\": attachitem\n}    \n\n\n\nreturn msgo;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 180,
+        "wires": [
+            [
+                "3feb19c7526d4b3f"
+            ]
+        ]
+    },
+    {
+        "id": "371d8c9d2ce2f976",
+        "type": "debug",
+        "z": "1b390ecb82aef0e3",
+        "name": "FileWrtDBG",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "3feb19c7526d4b3f",
+        "type": "cloudantplus out",
+        "z": "1b390ecb82aef0e3",
+        "name": "StoreFileInDB",
+        "cloudant": "7a7f803fe40b5d6a",
+        "database": "ufiles",
+        "service": "_ext_",
+        "payonly": true,
+        "operation": "insert",
+        "x": 780,
+        "y": 180,
+        "wires": [
+            [
+                "371d8c9d2ce2f976"
+            ]
+        ]
+    }
+]
