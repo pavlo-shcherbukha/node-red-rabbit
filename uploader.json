@@ -52,6 +52,13 @@
         "credsFromSettings": false
     },
     {
+        "id": "7a7f803fe40b5d6a",
+        "type": "cloudantplus",
+        "host": "http://couchdb:5984",
+        "name": "insert docu,emt",
+        "useapikey": false
+    },
+    {
         "id": "7c30fb48.99cd2c",
         "type": "http in",
         "z": "931fc66e047477c0",
@@ -156,7 +163,7 @@
         "type": "function",
         "z": "931fc66e047477c0",
         "name": "toBase64",
-        "func": "//let msg1={}\nlet msg2={}\nmsg.name = msg.req.files[0].originalname;\n//msg2.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.payload = \"Файл не зображення, тому не може бути відображено\";\n}\nmsg2.payload={\n    content: msg.req.files[0].buffer,\n    \"name\":msg.req.files[0].originalname,\n    \"content_type\": msg.req.files[0].mimetype\n};\n//content: msg.req.files[0].buffer.toString(),\nreturn [msg, msg2];\n\n",
+        "func": "//let msg1={}\nlet msg2={}\nmsg.name = msg.req.files[0].originalname;\n//msg2.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.payload = \"Файл не зображення, тому не може бути відображено\";\n}\nmsg2.payload={\n    content: msg.req.files[0].buffer.toString('base64'),\n    \"name\":msg.req.files[0].originalname,\n    \"content_type\": msg.req.files[0].mimetype\n};\n//content: msg.req.files[0].buffer.toString(),\nreturn [msg, msg2];\n\n",
         "outputs": 2,
         "timeout": "",
         "noerr": 0,
@@ -245,8 +252,7 @@
         "wires": [
             [
                 "dce6a8c1ccbb1a9d",
-                "af2dd38c468f429f",
-                "371d8c9d2ce2f976"
+                "af2dd38c468f429f"
             ]
         ]
     },
@@ -268,28 +274,11 @@
         "wires": []
     },
     {
-        "id": "e1785e7cc67d2626",
-        "type": "file",
-        "z": "1b390ecb82aef0e3",
-        "name": "FileWriter",
-        "filename": "filename",
-        "filenameType": "msg",
-        "appendNewline": false,
-        "createDir": false,
-        "overwriteFile": "true",
-        "encoding": "binary",
-        "x": 720,
-        "y": 280,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "af2dd38c468f429f",
         "type": "function",
         "z": "1b390ecb82aef0e3",
         "name": "PrepareFile",
-        "func": "let msgo={}\nmsgo.payload = msg.payload.content\nmsgo.filename = msg.payload.name\nreturn msgo;",
+        "func": "let msgo={}\n//msgo.payload = msg.payload.content\n//msgo.filename = msg.payload.name\n\n//msgo.payload = {   \n//    \"name\": msg.payload.name,\n//    \"_attachments\": {       \n//        \"attachment.jpeg\": {\n//            \"content_type\": msg.payload.content_type,\n//            \"data\": msg.payload.content\n//        } \n//    }  \n//}     \n\nlet attach = {\n            \"content_type\": msg.payload.content_type,\n            \"data\": msg.payload.content\n} \n\nlet attachitem={}\nattachitem[ msg.payload.name ]=attach\n\nmsgo.payload = {   \n    \"name\": msg.payload.name,\n    \"_attachments\": attachitem\n}    \n\n\n\nreturn msgo;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -300,7 +289,8 @@
         "y": 280,
         "wires": [
             [
-                "e1785e7cc67d2626"
+                "3feb19c7526d4b3f",
+                "371d8c9d2ce2f976"
             ]
         ]
     },
@@ -317,9 +307,25 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 450,
-        "y": 380,
+        "x": 630,
+        "y": 500,
         "wires": []
+    },
+    {
+        "id": "3feb19c7526d4b3f",
+        "type": "cloudantplus out",
+        "z": "1b390ecb82aef0e3",
+        "name": "store-file",
+        "cloudant": "7a7f803fe40b5d6a",
+        "database": "ufiles",
+        "service": "_ext_",
+        "payonly": true,
+        "operation": "insert",
+        "x": 720,
+        "y": 380,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "efe7a260307e6202",
