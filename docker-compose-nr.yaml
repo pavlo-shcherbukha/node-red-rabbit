@@ -1,0 +1,69 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:4.0-management
+    container_name: rabbitmqredc
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+  couchdb:
+    image: couchdb
+    #restart: always
+    ports:
+      - '5984:5984'
+    environment:
+      - COUCHDB_USER=devadm
+      - COUCHDB_PASSWORD=qq    
+    volumes:
+      - /home/psh/psh_dev/github-io/github-io/tz-000029-rabbitmq/py-rabbit/learnamqp/tz-000001-init/learnamqp/db
+  red-sender:
+    # 1===
+    #image: nodered/node-red
+    #container_name: redsender
+    build:
+      context: ./
+      dockerfile: nodered.dockerfile 
+      args:
+        GIT_USER: pavlo-shcherbukha
+        GIT_PSW: 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
+        GIT_BRANCH: tz-00001
+    ports:
+      - "1880:1880"
+    volumes:
+      - /home/psh/psh_dev/github-io/github-io/tz-000029-rabbitmq/py-rabbit/learnamqp/tz-000001-init/learnamqp/nodered
+    links:
+      - "rabbitmq"
+      - "couchdb"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      couchdb:
+        condition: service_started
+    environment:
+      RABBITMQ_USER: "guest"
+      RABBITMQ_PASSWORD: "guest"
+      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_PORT: "5672"      
+      COUCHDB_AUTH_TYPE: "COUCHDB_SESSION"
+      COUCHDB_URL: "http://couchdb:5984"
+      COUCHDB_USERNAME: "devadm"
+      COUCHDB_PASSWORD: "qq" 
+      FLOWS: "uploader.json"     
+      #FLOWS: "flows.json"     
+      GIT_USER: "pavlo-shcherbukha"
+      GIT_EMAIL: "pasha.kx@gmail.com"
+      GIT_PSW: "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"
+      GIT_BRANCH: "tz-00001"
+      FLOWDIR: "/data"
+  
+
+   
