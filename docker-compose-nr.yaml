@@ -1,0 +1,67 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:4.0-management
+    container_name: rabbitmqredc
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+  couchdb:
+    image: couchdb
+    #restart: always
+    ports:
+      - '5984:5984'
+    environment:
+      - COUCHDB_USER=devadm
+      - COUCHDB_PASSWORD=qq    
+    volumes:
+      - /home/psh/db
+  red-sender:
+    # 1===
+    #image: nodered/node-red
+    #container_name: redsender
+    build:
+      context: ./
+      dockerfile: nodered.dockerfile 
+      args:
+        GIT_USER: input_git_user
+        GIT_PSW: input_git_token
+        GIT_BRANCH: input_git_branch
+        GIT_REPO: input_git_repo_without_https://
+        GIT_EMAIL: inpit_git_email
+    ports:
+      - "1880:1880"
+    volumes:
+      - /home/psh/nr
+    links:
+      - "rabbitmq"
+      - "couchdb"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      couchdb:
+        condition: service_started
+    environment:
+      RABBITMQ_USER: "guest"
+      RABBITMQ_PASSWORD: "guest"
+      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_PORT: "5672"      
+      COUCHDB_AUTH_TYPE: "COUCHDB_SESSION"
+      COUCHDB_URL: "http://couchdb:5984"
+      COUCHDB_USERNAME: "devadm"
+      COUCHDB_PASSWORD: "qq" 
+      #FLOWS: "flows.json"     
+      FLOWS: "uploader.json"     
+
+  
+
+   
