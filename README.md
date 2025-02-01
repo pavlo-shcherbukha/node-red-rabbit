@@ -31,10 +31,47 @@ The main focus aimed to learning integration Node-Red with RabbitMQ. CouchDB is 
 Simple examples from [FlowFuse: Using AMQP with Node-RED](https://flowfuse.com/node-red/protocol/amqp/)
 This is example is aimed to test node which I am using. 
 
+- file uploader
+
+<kbd><img src="doc/pic-3.png" /></kbd>
+<p style="text-align: center;"><a name="pic-3">pic-3</a></p>
+
+
+- direct message exchange
+
+<kbd><img src="doc/pic-4.png" /></kbd>
+<p style="text-align: center;"><a name="pic-4">pic-4</a></p>
+
+
+- topic exchange
+
+<kbd><img src="doc/pic-5.png" /></kbd>
+<p style="text-align: center;"><a name="pic-5">pic-5</a></p>
+
+- fanout exchange
+
+<kbd><img src="doc/pic-6.png" /></kbd>
+<p style="text-align: center;"><a name="pic-06">pic-06</a></p>
+
+- headers exchange
+
+<kbd><img src="doc/pic-07.png" /></kbd>
+<p style="text-align: center;"><a name="pic-7">pic-7</a></p>
+
 ### upoader.json 
 Developed a simple my example with direct axchange.
 The idea is from one flow uploading some file  using http and publish file binary  in queue.
 The flow-consumner read binary file  from queue and store it into CouchDB as attachment. 
+
+- publisher
+<kbd><img src="doc/pic-01.png" /></kbd>
+<p style="text-align: center;"><a name="pic-01">pic-01</a></p>
+
+- consumer
+
+<kbd><img src="doc/pic-02.png" /></kbd>
+<p style="text-align: center;"><a name="pic-02">pic-02</a></p>
+
 
 ## Run it in docker composer
 
