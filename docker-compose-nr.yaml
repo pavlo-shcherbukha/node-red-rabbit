@@ -60,12 +60,7 @@ services:
       COUCHDB_USERNAME: "devadm"
       COUCHDB_PASSWORD: "qq" 
       FLOWS: "uploader.json"     
-      #FLOWS: "flows.json"     
-      #GIT_USER: "pavlo-shcherbukha"
-      #GIT_EMAIL: "pasha.kx@gmail.com"
-      #GIT_PSW: "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"
-      #GIT_BRANCH: "tz-00002"
-      #FLOWDIR: "/data"
+
   
 
    
