@@ -35,7 +35,9 @@ services:
       args:
         GIT_USER: pavlo-shcherbukha
         GIT_PSW: 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
-        GIT_BRANCH: tz-00001
+        GIT_BRANCH: tz-00002
+        GIT_REPO: github.com/pavlo-shcherbukha/node-red-rabbit.git
+        GIT_EMAIL: "pasha.kx@gmail.com"
     ports:
       - "1880:1880"
     volumes:
@@ -59,11 +61,11 @@ services:
       COUCHDB_PASSWORD: "qq" 
       FLOWS: "uploader.json"     
       #FLOWS: "flows.json"     
-      GIT_USER: "pavlo-shcherbukha"
-      GIT_EMAIL: "pasha.kx@gmail.com"
-      GIT_PSW: "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"
-      GIT_BRANCH: "tz-00002"
-      FLOWDIR: "/data"
+      #GIT_USER: "pavlo-shcherbukha"
+      #GIT_EMAIL: "pasha.kx@gmail.com"
+      #GIT_PSW: "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"
+      #GIT_BRANCH: "tz-00002"
+      #FLOWDIR: "/data"
   
 
    

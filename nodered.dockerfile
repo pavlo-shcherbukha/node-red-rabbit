@@ -4,11 +4,14 @@ FROM nodered/node-red
 ARG GIT_USER
 ARG GIT_PSW
 ARG GIT_BRANCH
+ARG GIT_REPO
+ARG GIT_EMAIL
+
 RUN rm -rf /data/* /data/.[!.]* /data/..?*
-#run echo "git clone https://${GIT_USER}:${GIT_PSW}@github.com/pavlo-shcherbukha/node-red-rabbit.git /data -b ${GIT_BRANCH}"
-RUN git clone https://${GIT_USER}:${GIT_PSW}@github.com/pavlo-shcherbukha/node-red-rabbit.git /data -b ${GIT_BRANCH}
-RUN  git config --global user.email "pasha.kx@gmail.com"
-RUN  git config --global user.name "${GIT_USER}"
+
+RUN git clone https://${GIT_USER}:${GIT_PSW}@${GIT_REPO} /data -b ${GIT_BRANCH}
+RUN git config --global user.email "${GIT_EMAIL}"
+RUN git config --global user.name "${GIT_USER}"
 RUN cd /data && npm install
-#ENV FLOWS=myservice.json
+
 

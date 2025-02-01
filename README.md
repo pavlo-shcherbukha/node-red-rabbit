@@ -33,7 +33,9 @@ https://cloud.ibm.com/apidocs/cloudant?code=python
 
 ## Run it in docker composer
 
-docker-compose -f  docker-compose-nr.yaml up --build -d
+docker-compose -f  docker-compose-nr.yaml up --remove-orphans  --force-recreate --build -d
+docker-compose -f  docker-compose-nr.yaml up --remove-orphans  --force-recreate --build -d
+--remove-orphans
 
 docker-compose -f  docker-compose-nr.yaml start
 docker-compose -f  docker-compose-nr.yaml stop
