@@ -24,7 +24,7 @@ services:
       - COUCHDB_USER=devadm
       - COUCHDB_PASSWORD=qq    
     volumes:
-      - /home/psh/psh_dev/github-io/github-io/tz-000029-rabbitmq/py-rabbit/learnamqp/tz-000001-init/learnamqp/db
+      - /home/psh/db
   red-sender:
     # 1===
     #image: nodered/node-red
@@ -33,15 +33,15 @@ services:
       context: ./
       dockerfile: nodered.dockerfile 
       args:
-        GIT_USER: pavlo-shcherbukha
-        GIT_PSW: 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
-        GIT_BRANCH: tz-00002
-        GIT_REPO: github.com/pavlo-shcherbukha/node-red-rabbit.git
-        GIT_EMAIL: "pasha.kx@gmail.com"
+        GIT_USER: input_git_user
+        GIT_PSW: input_git_token
+        GIT_BRANCH: input_git_branch
+        GIT_REPO: input_git_repo_without_https://
+        GIT_EMAIL: inpit_git_email
     ports:
       - "1880:1880"
     volumes:
-      - /home/psh/psh_dev/github-io/github-io/tz-000029-rabbitmq/py-rabbit/learnamqp/tz-000001-init/learnamqp/nodered
+      - /home/psh/nr
     links:
       - "rabbitmq"
       - "couchdb"
@@ -59,7 +59,8 @@ services:
       COUCHDB_URL: "http://couchdb:5984"
       COUCHDB_USERNAME: "devadm"
       COUCHDB_PASSWORD: "qq" 
-      FLOWS: "flows.json"     
+      #FLOWS: "flows.json"     
+      FLOWS: "uploader.json"     
 
   
 
